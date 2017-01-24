@@ -1,12 +1,6 @@
-activate :blog do |blog|
-  blog.permalink = "/{title}.html"
-  blog.layout = "article"
-end
-activate :directory_indexes
-
-activate :autoprefixer, browsers: [
-  "last 2 versions"
-]
+page '/*.xml', layout: false
+page '/*.json', layout: false
+page '/*.txt', layout: false
 
 activate :external_pipeline,
          name: :webpack,
@@ -48,14 +42,6 @@ configure :server do
     files.on_change :source do |changed|
       changed_js = changed.select do |f|
         f[:full_path].extname === ".js" && !f[:full_path].to_s.include?(".tmp")
-      end
-
-      if changed_js.length > 0
-        puts "== Linting Javascript"
-
-        changed_js.each do |file|
-          puts `./node_modules/eslint/bin/eslint.js #{file[:full_path]}`
-        end
       end
     end
   end

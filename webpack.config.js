@@ -1,12 +1,12 @@
 var ExtractTextPlugin = require("extract-text-webpack-plugin");
+var path = require("path");
 
 module.exports = {
   entry: {
     index: [
       './source/stylesheets/application.scss',
       './source/javascripts/index.js'
-    ],
-    vendor: ['babel/polyfill']
+    ]
   },
 
   resolve: {
@@ -23,16 +23,18 @@ module.exports = {
       test: /source\/javascripts\/.*\.js$/,
       exclude: /node_modules|\.tmp|vendor/,
       loaders: ['babel'],
-    }, {
-      test: /.*\.scss$/,
-      // loaders: ['style', 'css', 'sass']
-      loader: ExtractTextPlugin.extract(
-        "style",
-        "css!sass?sourceMap&includePaths[]=" + __dirname + "/node_modules"
-      )
+    },
+    {
+      test: /\.(sass|scss)$/,
+      loader: ExtractTextPlugin.extract(["css?sourceMap", "sass?sourceMap"]),
+      include: __dirname
     }]
   },
-
+  sassLoader: {
+    includePaths: [
+      path.resolve(__dirname, "node_modules/bulma")
+    ]
+  },
   plugins: [
     new ExtractTextPlugin("stylesheets/app.css")
   ]
